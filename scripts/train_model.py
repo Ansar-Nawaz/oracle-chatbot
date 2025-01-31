@@ -1,29 +1,34 @@
 import pandas as pd
-from sklearn.model_selection import train_test_split
-from sklearn.ensemble import RandomForestClassifier
-import joblib
+from sentence_transformers import InputExample, losses, SentenceTransformer
+from torch.utils.data import DataLoader
 
-# Load existing data
-df = pd.read_csv('/home/orasniper/oracle-chatbot/data/oracle_errors.csv')
+def train_model():
+    df = pd.read_csv('/home/orasniper/oracle-chatbot/data/oracle_errors.csv')
+    
+    # Create training pairs
+    train_examples = []
+    for _, row in df.iterrows():
+        train_examples.append(InputExample(
+            texts=[row['description'], row['solution']],
+            label=1.0
+        ))
+        # Add negative examples
+        train_examples.append(InputExample(
+            texts=[row['description'], "Unrelated error solution"],
+            label=0.0
+        ))
 
-# Simulate new data (replace with actual feedback loop)
-new_errors = pd.DataFrame([{
-    'code': 'ORA-12345',
-    'description': 'New error',
-    'cause': 'Test cause',
-    'solution': 'Test solution'
-}])
-df = pd.concat([df, new_errors], ignore_index=True)
+    # Initialize model
+    model = SentenceTransformer('all-MiniLM-L6-v2')
+    train_dataloader = DataLoader(train_examples, shuffle=True, batch_size=32)
+    train_loss = losses.CosineSimilarityLoss(model)
 
-# Feature engineering (simplified example)
-X = df['description']
-y = df['code']
-
-# Train a classifier (for intent recognition)
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
-classifier = RandomForestClassifier()
-classifier.fit(X_train, y_train)
-
-# Save the updated model
-joblib.dump(classifier, '//home/orasniper/oracle-chatbot/models/error_classifier.pkl')
+    # Fine-tune
+    model.fit(
+        train_objectives=[(train_dataloader, train_loss)],
+        epochs=3,
+        warmup_steps=100
+    )
+    
+    model.save('/home/orasniper/oracle-chatbot/models/finetuned_model')
 

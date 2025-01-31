@@ -2,30 +2,42 @@ import pandas as pd
 import numpy as np
 import faiss
 from sentence_transformers import SentenceTransformer
+from collections import deque
 from functools import lru_cache
 
-# Load data and models
-df = pd.read_csv('/home/orasniper/oracle-chatbot/data/oracle_errors.csv')
-model = SentenceTransformer('all-MiniLM-L6-v2')
-index = faiss.read_index('/home/orasniper/oracle-chatbot/models/oracle_errors.index')
-
-@lru_cache(maxsize=1000)  # Cache frequent queries
-def get_answer(user_query: str) -> str:
-    # Convert query to embedding
-    query_embedding = model.encode([user_query], convert_to_numpy=True)
+class ChatSession:
+    def __init__(self, session_id, max_history=3):
+        self.session_id = session_id
+        self.history = deque(maxlen=max_history)
+        self.df = pd.read_csv('/home/orasniper/oracle-chatbot/data/oracle_errors.csv')
+        self.model = SentenceTransformer('/home/orasniper/oracle-chatbot/models/finetuned_model')
+        self.index = faiss.read_index('/home/orasniper/oracle-chatbot/models/oracle_errors.index')
     
-    # Search FAISS index
-    distances, indices = index.search(query_embedding, k=1)
-    closest_error = df.iloc[indices[0][0]]
+    def _format_context(self):
+        return "\n".join([f"Q: {q}\nA: {a}" for q, a in self.history])
     
-    return f"""
-    **Error**: {closest_error['code']}
-    **Description**: {closest_error['description']}
-    **Cause**: {closest_error['cause']}
-    **Solution**: {closest_error['solution']}
-    """
+    @lru_cache(maxsize=1000)
+    def _search_index(self, query):
+        query_embedding = self.model.encode([query])
+        distances, indices = self.index.search(query_embedding, 3)
+        return [self.df.iloc[i] for i in indices[0]]
 
-# Example usage:
-print(get_answer("How to fix ORA-00904?"))
-
+    def ask(self, query):
+        contextual_query = f"""
+        Conversation History:
+        {self._format_context()}
+        New Query: {query}
+        """
+        
+        results = self._search_index(contextual_query)
+        best_match = results[0]
+        
+        self.history.append((query, best_match['solution']))
+        return {
+            'code': best_match['code'],
+            'description': best_match['description'],
+            'cause': best_match['cause'],
+            'solution': best_match['solution'],
+            'confidence': results[0]['score']
+        }
 

@@ -1,13 +1,13 @@
 # Use Python 3.9 as the base image
 FROM python:3.9-slim
 
-# Install system dependencies (required for FAISS and spaCy)
+# Install system dependencies
 RUN apt-get update && apt-get install -y \
-    gcc \          # Compiler for some Python packages
-    g++ \          # Compiler for C/C++ code
-    libopenblas-dev \  # Math library for FAISS
-    liblapack-dev \    # More math libraries
-    && rm -rf /var/lib/apt/lists/*  # Clean up to reduce image size
+    gcc \
+    g++ \
+    libopenblas-dev \
+    liblapack-dev \
+    && rm -rf /var/lib/apt/lists/*
 
 # Set working directory
 WORKDIR /app

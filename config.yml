@@ -1,13 +1,11 @@
 version: "3.1"
 
-# Add this line ⬇️
-language: en
+recipe: default.v1  # Add this to resolve FutureWarning
 
 pipeline:
-  - name: HFTransformersNLP
-    model_name: "bert-base-uncased"
-  - name: LanguageModelTokenizer
-  - name: LanguageModelFeaturizer
+  - name: WhitespaceTokenizer
+  - name: RegexFeaturizer
+  - name: LexicalSyntacticFeaturizer
   - name: DIETClassifier
     epochs: 100
 

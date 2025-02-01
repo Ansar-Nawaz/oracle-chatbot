@@ -4,10 +4,10 @@
 #gunicorn==20.1.0
 # Uncomment the next line if you plan to use PostgreSQL on Railway.
 # psycopg2-binary==2.9.6
-rasa==3.6.15
 sentence-transformers==2.2.2
 faiss-cpu==1.7.4
 pdfplumber==0.9.0
 psycopg2-binary==2.9.9
+rasa==3.6.15
 spacy==3.7.4
 https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.7.0/en_core_web_sm-3.7.0.tar.gz

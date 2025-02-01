@@ -1,14 +1,12 @@
-version: "3.0"
+version: "3.1"  # Update from 3.0 to 3.1
+
 intents:
-  - error_lookup
-  - provide_feedback
+  - ask_error   # Ensure intents are explicitly listed
+  - greet
 
 responses:
-  utter_ask_feedback:
-    - text: "Was this solution helpful? (Yes/No)"
-  utter_thanks:
-    - text: "Thank you for your feedback!"
+  utter_greet:
+    - text: "Hello! How can I help with Oracle errors today?"
 
 actions:
-  - action_fetch_solution
-  - action_store_feedback
+  - action_fetch_solutionk

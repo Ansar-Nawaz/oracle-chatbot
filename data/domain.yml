@@ -1,0 +1,12 @@
+version: "3.1"
+
+intents:
+  - ask_error
+  - greet
+
+responses:
+  utter_greet:
+    - text: "Hello! How can I help with Oracle errors today?"
+
+actions:
+  - action_fetch_solution

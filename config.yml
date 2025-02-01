@@ -5,13 +5,11 @@ recipe: default.v1
 pipeline:
   - name: WhitespaceTokenizer
   - name: RegexFeaturizer
-  - name: LexicalSyntacticFeaturizer
   - name: DIETClassifier
-    epochs: 100
+    epochs: 50  # Reduced for Railway resource limits
 
 policies:
   - name: MemoizationPolicy
   - name: TEDPolicy
-    max_history: 5
-    epochs: 100
-    constrain_similarities: true
+    max_history: 3  # Simplified for stability
+    epochs: 50

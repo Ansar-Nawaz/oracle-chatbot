@@ -4,13 +4,12 @@ intents:
   - ask_error
   - greet
 
+entities:
+  - error_code  # Required for ORA-XXXXX extraction
+
 responses:
   utter_greet:
-    - text: "👋 Hi! I'm your Oracle error assistant. What's broken?"
+    - text: "Hello! Ask me about Oracle errors (e.g., ORA-00942)."
 
 actions:
   - action_fetch_solution
-
-session_config:
-  session_expiration_time: 60
-  carry_over_slots_to_new_session: true

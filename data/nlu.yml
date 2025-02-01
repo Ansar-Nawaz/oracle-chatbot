@@ -3,12 +3,12 @@ version: "3.1"
 nlu:
 - intent: ask_error
   examples: |
-    - How to fix [ORA-00942](error_code)?
-    - What does [ORA-01555](error_code) mean?
-    - Help with error [ORA-00001]
+    - fix [ORA-00942](error_code)
+    - what is [ORA-01555](error_code)
+    - help with [ORA-00001](error_code)
 
 - intent: greet
   examples: |
-    - Hi
-    - Hello
-    - Good morning
+    - hi
+    - hello
+    - heyg

@@ -1,9 +1,11 @@
 version: "3.1"
 
+# Add this line ⬇️
+language: en
+
 pipeline:
   - name: HFTransformersNLP
     model_name: "bert-base-uncased"
-    model_weights: "rasa/LaBSE"
   - name: LanguageModelTokenizer
   - name: LanguageModelFeaturizer
   - name: DIETClassifier

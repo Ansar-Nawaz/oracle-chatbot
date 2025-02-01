@@ -1,7 +1,7 @@
-rasa==3.6.15
-sentence-transformers==2.2.2
-faiss-cpu==1.7.4
-pdfplumber==0.9.0
-psycopg2-binary==2.9.9
-tensorflow==2.12.0 \
-  --hash=sha256:e1f73d248894c9d77766c4079a0705bd5e781523487e0f1be30f3cd90fb4a1b6
+Flask==2.2.2
+Flask-SQLAlchemy==3.0.2
+pdfminer.six==20221105
+gunicorn==20.1.0
+# Uncomment the next line if you plan to use PostgreSQL on Railway.
+# psycopg2-binary==2.9.6
+

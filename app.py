@@ -1,16 +1,16 @@
 from flask import Flask, request, jsonify
-from flask_async import Async
+from flask_cors import CORS
 from scripts.query_handler import ChatSession
 import uuid
 import json
 
 app = Flask(__name__)
-async_app = Async(app)
+CORS(app)  # Only CORS, no async
 
 sessions = {}
 
-@async_app.route('/ask', methods=['POST'])
-async def ask():
+@app.route('/ask', methods=['POST'])
+def ask():
     data = request.json
     session_id = data.get('session_id') or str(uuid.uuid4())
     query = data.get('query', '')
@@ -24,8 +24,8 @@ async def ask():
         'response': response
     })
 
-@async_app.route('/feedback', methods=['POST'])
-async def feedback():
+@app.route('/feedback', methods=['POST'])
+def feedback():
     data = request.json
     with open('../data/feedback.jsonl', 'a') as f:
         f.write(json.dumps(data) + '\n')
@@ -33,4 +33,3 @@ async def feedback():
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, threaded=True)
-

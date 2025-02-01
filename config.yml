@@ -1,6 +1,9 @@
 version: "3.1"
 
-recipe: default.v1  # Add this to resolve FutureWarning
+# Mandatory parameter ⬇️
+language: en
+
+recipe: default.v1
 
 pipeline:
   - name: WhitespaceTokenizer

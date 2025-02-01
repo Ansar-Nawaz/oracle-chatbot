@@ -1,14 +1,16 @@
-import os
+version: "3.1"
 
-BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+pipeline:
+  - name: HFTransformersNLP
+    model_name: "bert-base-uncased"
+    model_weights: "rasa/LaBSE"
+  - name: LanguageModelTokenizer
+  - name: LanguageModelFeaturizer
+  - name: DIETClassifier
+    epochs: 100
 
-class Config:
-    # Path to the PDF file
-    PDF_PATH = os.path.join(BASE_DIR, "data", "error-messages.pdf")
-    # Database configuration
-    SQLALCHEMY_DATABASE_URI = os.environ.get("DATABASE_URL") or \
-        "sqlite:///" + os.path.join(BASE_DIR, "oracle_errors.db")
-    SQLALCHEMY_TRACK_MODIFICATIONS = False
-    # Secret key for session management
-    SECRET_KEY = os.environ.get("SECRET_KEY") or "a-very-secret-key"
-
+policies:
+  - name: MemoizationPolicy
+  - name: TEDPolicy
+    max_history: 5
+    epochs: 100

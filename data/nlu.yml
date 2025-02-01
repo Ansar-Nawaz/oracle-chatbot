@@ -1,0 +1,15 @@
+version: "3.1"
+
+nlu:
+- intent: ask_error
+  examples: |
+    - How to fix [ORA-00942](error_code)?
+    - What does [ORA-01555](error_code) mean?
+    - I'm getting error [ORA-00001](error_code)
+    - Help with error [ORA-12514](error_code)
+
+- intent: greet
+  examples: |
+    - Hi
+    - Hello
+    - Hey

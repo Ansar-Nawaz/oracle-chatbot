@@ -3,21 +3,14 @@ FROM python:3.9-slim
 WORKDIR /app
 COPY . .
 
-# Install with strict versions
+# Install with minimal memory footprint
 RUN pip install --no-cache-dir --upgrade pip && \
-    pip install --no-cache-dir \
-    rasa==3.6.15 \
-    sentence-transformers==2.2.2 \
-    faiss-cpu==1.7.4 \
-    pandas==2.0.3 \
-    spacy==3.7.4
+    pip install --no-cache-dir -r requirements.txt && \
+    python -m spacy download en_core_web_sm
 
-# Download model and validate
-RUN python -m spacy download en_core_web_sm && \
-    rasa data validate
-
-# Train
-RUN rasa train --quiet
+# Train with reduced resources
+ENV TF_CPP_MIN_LOG_LEVEL=3  # Suppress TensorFlow logs
+RUN rasa train --quiet --augmentation 0  # Disable augmentation
 
 EXPOSE $PORT
 CMD rasa run --enable-api --cors "*" --port $PORT

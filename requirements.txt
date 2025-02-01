@@ -1,6 +1,7 @@
 rasa==3.6.15
 sentence-transformers==2.2.2
 faiss-cpu==1.7.4
-pandas==2.0.3
 spacy==3.7.4
+sqlalchemy<2.0.0  # Fix SQLAlchemy 2.0 warnings
+sanic-cors==2.0.1  # Updated to fix distutils warning
 https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.7.0/en_core_web_sm-3.7.0.tar.gz

@@ -6,6 +6,7 @@ import numpy as np
 from sentence_transformers import SentenceTransformer
 import os
 
+os.environ["PORT"] = "5005"
 model = SentenceTransformer('all-MiniLM-L6-v2')
 index = faiss.read_index("data/error_index.faiss")
 df = pd.read_csv("data/errors.csv")

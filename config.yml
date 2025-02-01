@@ -1,0 +1,9 @@
+recipe: default.v1
+pipeline:
+  - name: HFTransformersNLP
+    model_name: "bert-base-uncased"
+  - name: LanguageModelTokenizer
+  - name: LanguageModelFeaturizer
+  - name: DIETClassifier
+    epochs: 100
+  - name: EntitySynonymMapper

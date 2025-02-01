@@ -1,22 +1,14 @@
 FROM python:3.9-slim
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y \
-    gcc \
-    g++ \
-    libopenblas-dev \
-    liblapack-dev \
-    && rm -rf /var/lib/apt/lists/*
-
 WORKDIR /app
-
-# Upgrade pip first
-RUN pip install --upgrade pip
-
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
-
-RUN python -m spacy download en_core_web_sm
 COPY . .
 
-CMD ["gunicorn", "--bind", "0.0.0.0:5000", "app:app"]
+# Install dependencies (no PDF parsing/FAISS building)
+RUN pip install --upgrade pip && pip install --default-timeout=1000 -r requirements.txt
+RUN python -m spacy download en_core_web_sm
+
+# Train Rasa
+RUN rasa train
+
+EXPOSE 5005
+CMD ["rasa", "run", "--enable-api", "--cors", "*"]

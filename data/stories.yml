@@ -1,12 +1,12 @@
 version: "3.1"
 
 stories:
-- story: Handle error lookup
+- story: error resolution flow
   steps:
   - intent: ask_error
   - action: action_fetch_solution
 
-- story: Greet the user
+- story: greeting flow
   steps:
   - intent: greet
-  - action: utter_greet
+  - action: utter_greett

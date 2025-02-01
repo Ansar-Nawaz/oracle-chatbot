@@ -1,12 +1,16 @@
-version: "3.1"  # Update from 3.0 to 3.1
+version: "3.1"
 
 intents:
-  - ask_error   # Ensure intents are explicitly listed
+  - ask_error
   - greet
 
 responses:
   utter_greet:
-    - text: "Hello! How can I help with Oracle errors today?"
+    - text: "👋 Hi! I'm your Oracle error assistant. What's broken?"
 
 actions:
-  - action_fetch_solutionk
+  - action_fetch_solution
+
+session_config:
+  session_expiration_time: 60
+  carry_over_slots_to_new_session: true

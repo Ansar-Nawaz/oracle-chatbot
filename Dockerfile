@@ -1,15 +1,20 @@
-# Stage 2: Runtime
+# Single-stage build for Railway
 FROM python:3.9-slim
-WORKDIR /app
 
-# Copy ALL required files from builder stage
-COPY --from=builder /app /app
-COPY --from=builder /usr/local/lib/python3.9/site-packages /usr/local/lib/python3.9/site-packages
-COPY --from=builder /usr/local/bin/rasa /usr/local/bin/rasa
+WORKDIR /app
+COPY . .
+
+# Install system dependencies and Python packages
+RUN apt-get update && apt-get install -y gcc && \
+    pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir -r requirements.txt && \
+    python -m spacy download en_core_web_sm
+
+# Train Rasa
+RUN rasa train --quiet --augmentation 0
 
 # Railway settings
 ENV PORT=5000
 EXPOSE $PORT
 
-# Use shell form to ensure ENV variables work
-CMD rasa run --enable-api --cors "*" --port $PORT --endpoints endpoints.yml
+CMD ["rasa", "run", "--enable-api", "--cors", "*", "--port", "5000", "--endpoints", "endpoints.yml"]

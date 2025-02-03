@@ -16,17 +16,15 @@
 
         body {
             margin: 0;
-            padding: 0;
+            padding: 20px;
             background: var(--background);
             color: var(--text);
             font-family: 'Segoe UI', system-ui;
-            min-height: 100vh;
         }
 
         .container {
             max-width: 800px;
             margin: 0 auto;
-            padding: 20px;
         }
 
         .header {
@@ -99,12 +97,11 @@
 
         <div class="chat-container" id="chatbox">
             <div class="message bot-message">
-                🚀 Hi! I'm OraSniper. Give me an error code (e.g., ORA-00942) 
-                and I'll provide the solution instantly!
+                🚀 Hi! I'm OraSniper. Enter an Oracle error code (e.g., ORA-00942) below!
             </div>
         </div>
 
-        <input type="text" id="userInput" placeholder="Enter Oracle error code...">
+        <input type="text" id="userInput" placeholder="Enter error code..." autofocus>
         <button onclick="sendMessage()">Get Solution</button>
     </div>
 
@@ -113,6 +110,8 @@
             const input = document.getElementById('userInput');
             const chatbox = document.getElementById('chatbox');
             
+            if (!input.value.trim()) return;
+
             // Add user message
             chatbox.innerHTML += `
                 <div class="message user-message">
@@ -139,7 +138,7 @@
             } catch (error) {
                 chatbox.innerHTML += `
                     <div class="message bot-message">
-                        ❌ Error: Could not connect to the server
+                        ❌ Error: Failed to connect to OraSniper
                     </div>
                 `;
             }
@@ -150,7 +149,7 @@
 
         // Enter key support
         document.getElementById('userInput').addEventListener('keypress', (e) => {
-            if(e.key === 'Enter') sendMessage();
+            if (e.key === 'Enter') sendMessage();
         });
     </script>
 </body>

@@ -3,7 +3,7 @@ services:
   rasa:
     build: .
     ports:
-      - "5005:5005"
+      - "5000:5000"
     environment:
       - DB_URL=postgresql://user:pass@db:5432/errors
     depends_on:

@@ -21,7 +21,7 @@ COPY --from=builder /usr/local/lib/python3.9/site-packages /usr/local/lib/python
 COPY --from=builder /usr/local/bin/rasa /usr/local/bin/rasa
 
 # Railway settings
-ENV PORT=5005
+ENV PORT=5000
 EXPOSE $PORT
 
-CMD ["rasa", "run", "--enable-api", "--cors", "*", "--port", "5005"]
+CMD ["rasa", "run", "--enable-api", "--cors", "*", "--port", "5000"]

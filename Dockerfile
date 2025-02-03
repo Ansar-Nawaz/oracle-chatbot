@@ -4,27 +4,24 @@ FROM python:3.9-slim as builder
 WORKDIR /app
 COPY . .
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y gcc && rm -rf /var/lib/apt/lists/*
-
-# Install Python dependencies globally
-RUN pip install --no-cache-dir --upgrade pip && \
+# Install system dependencies and Python packages
+RUN apt-get update && apt-get install -y gcc && \
+    pip install --no-cache-dir --upgrade pip && \
     pip install --no-cache-dir -r requirements.txt && \
     python -m spacy download en_core_web_sm
 
-# Train Rasa model
+# Train the model
 RUN rasa train --quiet --augmentation 0
 
 # Stage 2: Runtime
 FROM python:3.9-slim
 WORKDIR /app
 COPY --from=builder /app /app
+COPY --from=builder /usr/local/lib/python3.9/site-packages /usr/local/lib/python3.9/site-packages
+COPY --from=builder /usr/local/bin/rasa /usr/local/bin/rasa
 
-# Set PATH to include Python binaries
-ENV PATH="/usr/local/bin:${PATH}"
-
-# Railway configuration
+# Railway settings
 ENV PORT=5005
 EXPOSE $PORT
 
-CMD rasa run --enable-api --cors "*" --port $PORT
+CMD ["rasa", "run", "--enable-api", "--cors", "*", "--port", "5005"]

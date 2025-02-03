@@ -6,10 +6,10 @@ pipeline:
   - name: WhitespaceTokenizer
   - name: RegexFeaturizer
   - name: DIETClassifier
-    epochs: 50  # Reduced for Railway resource limits
+    epochs: 20  # Reduced training time
+    hidden_layers_sizes:
+      text: [64, 32]  # Smaller layers
+    constrain_similarities: true  # Fixes warnings
 
 policies:
   - name: MemoizationPolicy
-  - name: TEDPolicy
-    max_history: 3  # Simplified for stability
-    epochs: 50

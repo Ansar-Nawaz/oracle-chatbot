@@ -1,0 +1,4 @@
+static_files:
+  paths:
+    - url: /
+      path: static

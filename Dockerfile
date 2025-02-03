@@ -1,29 +1,37 @@
-# Stage 1: Build and train
+# Stage 1: Builder
 FROM python:3.9-slim as builder
 
 WORKDIR /app
 COPY . .
 
-# Install minimal dependencies
+# Install system dependencies (if needed)
+RUN apt-get update && apt-get install -y gcc && rm -rf /var/lib/apt/lists/*
+
+# Create non-root user
+RUN useradd -m appuser && chown -R appuser:appuser /app
+USER appuser
+
+# Install Python dependencies globally (fixes PATH issues)
 RUN pip install --no-cache-dir --upgrade pip && \
-    pip install --no-cache-dir \
-    rasa==3.6.15 \
-    sentence-transformers==2.2.2 \
-    faiss-cpu==1.7.4 \
-    pandas==1.5.3 \
-    spacy==3.7.4 && \
+    pip install --no-cache-dir -r requirements.txt && \
     python -m spacy download en_core_web_sm
 
-# Train with minimal resources
+# Train Rasa
 RUN rasa train --quiet --augmentation 0
 
 # Stage 2: Runtime
 FROM python:3.9-slim
 WORKDIR /app
 COPY --from=builder /app /app
+COPY --from=builder /home/appuser/.local /home/appuser/.local
 
-# Railway-specific settings
+# Add user's Python binaries to PATH
+ENV PATH="/home/appuser/.local/bin:${PATH}"
+
+# Railway settings
 ENV PORT=5005
 EXPOSE $PORT
 
+# Run as non-root user
+USER appuser
 CMD rasa run --enable-api --cors "*" --port $PORT

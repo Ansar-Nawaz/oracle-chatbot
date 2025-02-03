@@ -1,6 +1,5 @@
 rasa==3.6.15
 sentence-transformers==2.2.2
 faiss-cpu==1.7.4
-pandas==1.5.3  # Lighter than 2.x
 spacy==3.7.4
 https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.7.0/en_core_web_sm-3.7.0.tar.gz

@@ -1,18 +1,3 @@
-# Stage 1: Builder
-FROM python:3.9-slim as builder
-
-WORKDIR /app
-COPY . .
-
-# Install system dependencies and Python packages
-RUN apt-get update && apt-get install -y gcc && \
-    pip install --no-cache-dir --upgrade pip && \
-    pip install --no-cache-dir -r requirements.txt && \
-    python -m spacy download en_core_web_sm
-
-# Train the model
-RUN rasa train --quiet --augmentation 0
-
 # Stage 2: Runtime
 FROM python:3.9-slim
 WORKDIR /app
@@ -26,5 +11,5 @@ COPY --from=builder /usr/local/bin/rasa /usr/local/bin/rasa
 ENV PORT=5000
 EXPOSE $PORT
 
-# Include endpoints.yml reference
-CMD ["rasa", "run", "--enable-api", "--cors", "*", "--port", "5000", "--endpoints", "endpoints.yml"]
+# Use shell form to ensure ENV variables work
+CMD rasa run --enable-api --cors "*" --port $PORT --endpoints endpoints.yml

@@ -1,4 +1,7 @@
+# endpoints.yml
 static_files:
   paths:
     - url: /
-      path: static
+      path: static/
+    - url: /webhooks
+      path: # Empty path to disable default Rasa response

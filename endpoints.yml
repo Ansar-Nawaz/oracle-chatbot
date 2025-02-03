@@ -3,4 +3,4 @@ static_files:
     - url: /
       path: static/
     - url: /
-      path: # Disable default Rasa response
+      method: GET  # Explicitly override the default Rasa GET handler

@@ -27,6 +27,6 @@ RUN python -m venv --copies /opt/venv && \
 # Expose the port your app is running on (change if needed)
 EXPOSE 5000
 
-# Start your application. For example, if you’re using gunicorn to run a Flask app:
+# Start your application using gunicorn
 CMD ["gunicorn", "--bind", "0.0.0.0:5000", "app:app"]
 

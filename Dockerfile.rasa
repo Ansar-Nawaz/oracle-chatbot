@@ -1,0 +1,18 @@
+# Use the official Rasa image
+FROM rasa/rasa:3.6.15
+
+# Set working directory
+WORKDIR /app
+
+# Copy your project files into the container
+COPY . /app
+
+# Expose Rasa's default port
+EXPOSE 5005
+
+# Train the Rasa model during the build
+RUN rasa train
+
+# Start the Rasa server with API enabled and CORS allowed
+CMD ["run", "--enable-api", "--cors", "*"]
+
